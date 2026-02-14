@@ -1,17 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ========== MOBILE MENU ==========
+  const burgerBtn = document.getElementById('burger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (burgerBtn && mobileMenu) {
+    burgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+  }
+
+  // ========== CHATBOT ==========
   const chatForm = document.getElementById('chat-form');
   const userInput = document.getElementById('user-input');
   const chatBox = document.getElementById('chat-box');
   const sendBtn = document.getElementById('send-btn');
 
   if (!chatForm || !userInput || !chatBox) {
-    console.error('Core elements not found!');
+    console.error('Chat elements not found!');
     return;
   }
 
   // Bot avatar SVG (reusable)
   const botAvatarHTML = `
-    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex-shrink-0 flex items-center justify-center mt-0.5">
+    <div class="w-8 h-8 rounded-full bg-secondary flex-shrink-0 flex items-center justify-center mt-0.5">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
       </svg>
@@ -27,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.className = 'flex justify-end';
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] shadow-lg shadow-indigo-500/10';
+    bubble.className = 'bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] shadow-sm';
 
     const p = document.createElement('p');
-    p.className = 'text-white text-sm leading-relaxed';
+    p.className = 'text-ink text-sm leading-relaxed';
     p.textContent = text;
 
     bubble.appendChild(p);
@@ -46,10 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.innerHTML = botAvatarHTML;
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] border border-white/5';
+    bubble.className = 'bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm';
 
     const p = document.createElement('p');
-    p.className = 'text-slate-200 text-sm leading-relaxed';
+    p.className = 'text-ink text-sm leading-relaxed';
     p.textContent = text;
 
     bubble.appendChild(p);
@@ -65,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     wrapper.innerHTML = `
       ${botAvatarHTML}
-      <div class="bg-white/10 backdrop-blur-sm rounded-2xl rounded-tl-sm px-4 py-3 border border-white/5">
+      <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
         <div class="flex items-center gap-1.5">
-          <span class="typing-dot w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>
-          <span class="typing-dot w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>
-          <span class="typing-dot w-2 h-2 rounded-full bg-indigo-400 inline-block"></span>
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
         </div>
       </div>
     `;
@@ -88,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.className = 'flex justify-center';
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2';
+    bubble.className = 'bg-peach/20 border border-peach/30 rounded-xl px-4 py-2';
 
     const p = document.createElement('p');
-    p.className = 'text-red-400 text-xs font-medium';
+    p.className = 'text-ink text-xs font-medium';
     p.textContent = text;
 
     bubble.appendChild(p);
@@ -101,12 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setLoading(isLoading) {
-    sendBtn.disabled = isLoading;
+    if (sendBtn) sendBtn.disabled = isLoading;
     userInput.disabled = isLoading;
     if (isLoading) {
-      sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      if (sendBtn) sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
     } else {
-      sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      if (sendBtn) sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       userInput.focus();
     }
   }
@@ -116,16 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // 1. Add user message
     appendUserMessage(message);
     userInput.value = '';
 
-    // 2. Show typing indicator & disable input
     setLoading(true);
     showTypingIndicator();
 
     try {
-      // 3. Send request
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -134,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       });
 
-      // 4. Handle response
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
