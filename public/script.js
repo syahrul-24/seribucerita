@@ -1,23 +1,131 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // ========== MOBILE MENU ==========
+  const burgerBtn = document.getElementById('burger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (burgerBtn && mobileMenu) {
+    burgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+  }
+
+  // ========== CHATBOT ==========
   const chatForm = document.getElementById('chat-form');
   const userInput = document.getElementById('user-input');
   const chatBox = document.getElementById('chat-box');
+  const sendBtn = document.getElementById('send-btn');
 
   if (!chatForm || !userInput || !chatBox) {
-    console.error('Core elements not found!');
+    console.error('Chat elements not found!');
     return;
   }
 
-  function appendMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message');
-    if (sender) {
-      sender.split(' ').forEach(cls => messageDiv.classList.add(cls));
+  // Bot avatar SVG (reusable)
+  const botAvatarHTML = `
+    <div class="w-8 h-8 rounded-full bg-secondary flex-shrink-0 flex items-center justify-center mt-0.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+    </div>
+  `;
+
+  function scrollToBottom() {
+    chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
+  }
+
+  function appendUserMessage(text) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex justify-end';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] shadow-sm';
+
+    const p = document.createElement('p');
+    p.className = 'text-ink text-sm leading-relaxed';
+    p.textContent = text;
+
+    bubble.appendChild(p);
+    wrapper.appendChild(bubble);
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function appendBotMessage(text) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-start gap-3';
+
+    wrapper.innerHTML = botAvatarHTML;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm';
+
+    const p = document.createElement('p');
+    p.className = 'text-ink text-sm leading-relaxed';
+    p.textContent = text;
+
+    bubble.appendChild(p);
+    wrapper.appendChild(bubble);
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function showTypingIndicator() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-start gap-3';
+    wrapper.id = 'typing-indicator';
+
+    wrapper.innerHTML = `
+      ${botAvatarHTML}
+      <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+        <div class="flex items-center gap-1.5">
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
+          <span class="typing-dot w-2 h-2 rounded-full bg-secondary inline-block"></span>
+        </div>
+      </div>
+    `;
+
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) indicator.remove();
+  }
+
+  function appendErrorMessage(text) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex justify-center';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bg-peach/20 border border-peach/30 rounded-xl px-4 py-2';
+
+    const p = document.createElement('p');
+    p.className = 'text-ink text-xs font-medium';
+    p.textContent = text;
+
+    bubble.appendChild(p);
+    wrapper.appendChild(bubble);
+    chatBox.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  function setLoading(isLoading) {
+    if (sendBtn) sendBtn.disabled = isLoading;
+    userInput.disabled = isLoading;
+    if (isLoading) {
+      if (sendBtn) sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+      if (sendBtn) sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      userInput.focus();
     }
-    messageDiv.innerText = text; // Use innerText for safety
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-    return messageDiv;
   }
 
   chatForm.addEventListener('submit', async (e) => {
@@ -25,44 +133,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
-    // 1. Add user message
-    appendMessage(message, 'user-message');
+    appendUserMessage(message);
     userInput.value = '';
 
-    // 2. Show thinking message
-    const thinkingDiv = appendMessage('Thinking...', 'bot-message thinking');
+    setLoading(true);
+    showTypingIndicator();
 
     try {
-      // 3. Send request
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conversation: [{ role: 'user', text: message }]
         })
       });
 
-      // 4. Handle response
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
-
-      // Remove thinking message
-      thinkingDiv.remove();
+      removeTypingIndicator();
 
       if (data.result) {
-        appendMessage(data.result, 'bot-message');
+        appendBotMessage(data.result);
       } else {
-        appendMessage('Sorry, no response received.', 'error-message');
+        appendErrorMessage('Maaf, tidak ada respons yang diterima.');
       }
     } catch (error) {
       console.error('Error:', error);
-      thinkingDiv.remove();
-      appendMessage('Failed to get response from server.', 'error-message');
+      removeTypingIndicator();
+      appendErrorMessage('Gagal mendapatkan respons dari server.');
+    } finally {
+      setLoading(false);
     }
   });
 });
