@@ -1,4 +1,4 @@
-const ALLOWED_ROLES = ['user', 'model'];
+const ALLOWED_ROLES = ['user', 'assistant'];
 const MAX_TEXT_LENGTH = 2000;
 const MAX_CONVERSATION_LENGTH = 20;
 

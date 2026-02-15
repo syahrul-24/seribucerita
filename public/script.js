@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.result) {
         appendBotMessage(data.result);
-        conversationHistory.push({ role: 'model', text: data.result });
+        conversationHistory.push({ role: 'assistant', text: data.result });
         saveHistory();
       } else {
         appendErrorMessage('Maaf, tidak ada respons yang diterima.');
