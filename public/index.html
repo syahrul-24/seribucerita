@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SeribuCerita — Teman Curhat AI untuk Kesehatan Mental</title>
+  <title>SeribuCerita — Teman Cerita AI untuk Kesehatan Mental</title>
   <meta name="description"
-    content="SeribuCerita adalah chatbot AI empatik yang siap mendengarkan ceritamu. Pelajari tentang kesehatan mental dan curhat kapan saja, di mana saja." />
+    content="SeribuCerita adalah teman cerita AI yang empatik dan siap mendengarkan. Pelajari tentang kesehatan mental dan berbagi cerita kapan saja, di mana saja." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,7 +112,7 @@
     </ul>
     <a href="#chatbot"
       class="hidden md:inline-block bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl hover:bg-accent/80 transition-colors duration-200 cursor-pointer">Mulai
-      Curhat</a>
+      Cerita</a>
     <!-- Mobile Burger -->
     <button id="burger-btn" class="md:hidden p-2 cursor-pointer" aria-label="Toggle menu">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-ink" fill="none" viewBox="0 0 24 24"
@@ -135,7 +135,7 @@
       </ul>
       <a href="#chatbot"
         class="block mt-3 bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl text-center hover:bg-accent/80 transition-colors duration-200 cursor-pointer">Mulai
-        Curhat</a>
+        Cerita</a>
     </div>
   </nav>
 
@@ -149,13 +149,14 @@
           <span class="text-secondary">Kami Mendengarkan</span>
         </h1>
         <p class="font-body text-muted text-base sm:text-lg leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
-          SeribuCerita adalah teman curhat AI yang empatik dan profesional. Ceritakan apa saja yang kamu rasakan — kami
+          SeribuCerita adalah teman cerita berbasis AI yang empatik dan profesional. Ceritakan apa saja yang kamu
+          rasakan — kami
           siap mendengarkan tanpa menghakimi.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <a href="#chatbot"
             class="bg-secondary text-white font-semibold px-8 py-3 rounded-xl hover:bg-secondary/80 transition-colors duration-200 cursor-pointer text-center">Mulai
-            Curhat</a>
+            Bercerita</a>
           <a href="#edukasi"
             class="border-2 border-primary text-ink font-semibold px-8 py-3 rounded-xl hover:bg-primary/10 transition-colors duration-200 cursor-pointer text-center">Pelajari
             Lebih</a>
@@ -241,7 +242,7 @@
   <section id="chatbot" class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-10">
-        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-ink mb-4">Curhat dengan SeribuCerita</h2>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-ink mb-4">Bercerita dengan SeribuCerita</h2>
         <p class="font-body text-muted text-base sm:text-lg max-w-2xl mx-auto">Ceritakan perasaanmu. Kami ada di sini
           untuk mendengarkan dengan empati dan memberikan dukungan.</p>
       </div>
@@ -284,7 +285,7 @@
                   <label class="flex items-center justify-between cursor-pointer group">
                     <div>
                       <p class="text-sm font-medium text-ink">Simpan riwayat 💬</p>
-                      <p class="text-xs text-muted mt-0.5">Lanjutkan curhatmu kapan saja</p>
+                      <p class="text-xs text-muted mt-0.5">Lanjutkan ceritamu kapan saja</p>
                     </div>
                     <div class="relative">
                       <input type="checkbox" id="save-history-toggle" class="sr-only peer" checked />
@@ -317,8 +318,8 @@
           <div class="flex justify-center" id="privacy-notice">
             <div class="bg-accent/10 border border-accent/20 rounded-xl px-4 py-2.5 max-w-[90%] text-center">
               <p class="text-xs text-muted leading-relaxed">
-                🔒 <strong class="text-ink">Privasimu aman.</strong> Percakapanmu hanya tersimpan di perangkatmu dan
-                tidak pernah kami simpan di server. Curhat dengan tenang ya 💙
+                🔒 <strong class="text-ink"> Privasimu aman.</strong> Semua percakapan tetap tersimpan di perangkatmu
+                dan tidak pernah kami simpan. Kamu bisa berbagi dengan tenang 💙
               </p>
             </div>
           </div>
@@ -333,8 +334,8 @@
             </div>
             <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm">
               <p class="text-ink text-sm leading-relaxed">Halo! Saya <strong
-                  class="text-secondary">SeribuCerita</strong>, teman curhat AI kamu. Ceritakan apa saja yang kamu
-                rasakan — saya siap mendengarkan tanpa menghakimi. 💙</p>
+                  class="text-secondary">SeribuCerita</strong>, teman cerita AI kamu. Ceritakan apa saja yang kamu
+                rasakan — saya siap mendengarkan. 💙</p>
             </div>
           </div>
         </div>
@@ -375,7 +376,8 @@
             </svg>
           </div>
           <h3 class="font-heading font-semibold text-ink mb-2">24/7 Tersedia</h3>
-          <p class="text-muted text-sm leading-relaxed">Curhat kapan saja, di mana saja. Kami selalu ada untukmu.</p>
+          <p class="text-muted text-sm leading-relaxed">Berbagi cerita kapan saja, di mana saja. Kami selalu ada
+            untukmu.</p>
         </div>
         <!-- Feature 2 -->
         <div class="bg-card rounded-2xl border border-primary/15 p-6 shadow-sm">

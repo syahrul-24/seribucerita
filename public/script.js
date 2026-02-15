@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.innerHTML = `
       ${botAvatarHTML}
       <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm">
-        <p class="text-ink text-sm leading-relaxed">Halo! Saya <strong class="text-secondary">SeribuCerita</strong>, teman curhat AI kamu. Ceritakan apa saja yang kamu rasakan — saya siap mendengarkan tanpa menghakimi. 💙</p>
+        <p class="text-ink text-sm leading-relaxed">Halo! Saya <strong class="text-secondary">SeribuCerita</strong>, teman cerita AI kamu. Ceritakan apa saja yang kamu rasakan — saya siap mendengarkan. 💙</p>
       </div>
     `;
     return wrapper;
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="bg-accent/10 border border-accent/20 rounded-xl px-4 py-2.5 max-w-[90%] text-center">
         <p class="text-xs text-muted leading-relaxed">
           🔒 <strong class="text-ink">Privasimu aman.</strong> Percakapanmu hanya tersimpan di perangkatmu dan
-          tidak pernah kami simpan di server. Curhat dengan tenang ya 💙
+          dan tidak pernah kami simpan. Kamu bisa berbagi dengan tenang 💙
         </p>
       </div>
     `;
