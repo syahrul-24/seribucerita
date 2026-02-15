@@ -1,11 +1,11 @@
 ---
 title: "Panduan Self-Care untuk Kesehatan Mental"
 slug: "panduan-self-care"
-category: "gaya-hidup"
+category: "merawat-kesehatanmu"
 excerpt: "Langkah-langkah praktis merawat kesehatan mental dan fisik untuk kehidupan yang lebih seimbang dan bermakna."
 date: "2026-02-14"
 readTime: "6 menit"
-image: "images/edu_selfcare.png"
+image: "/images/edu_selfcare.png"
 tags: ["self-care", "kesejahteraan", "gaya-hidup-sehat"]
 sources:
   - "National Institute of Mental Health. (2023). Caring for Your Mental Health."

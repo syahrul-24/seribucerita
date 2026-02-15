@@ -5,7 +5,7 @@ category: "kondisi-kesehatan-mental"
 excerpt: "Rasa cemas itu wajar, tapi kapan rasa cemas berubah menjadi gangguan? Kenali jenis-jenis gangguan kecemasan dan cara mengatasinya."
 date: "2026-02-12"
 readTime: "6 menit"
-image: "images/edu_anxiety.png"
+image: "/images/edu_anxiety.png"
 tags: ["kecemasan", "anxiety", "kondisi-mental"]
 sources:
   - "World Health Organization. (2023). Anxiety Disorders."

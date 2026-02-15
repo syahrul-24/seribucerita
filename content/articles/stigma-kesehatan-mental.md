@@ -1,11 +1,11 @@
 ---
 title: "Stigma Kesehatan Mental: Apa dan Bagaimana Melawannya"
 slug: "stigma-kesehatan-mental"
-category: "masyarakat"
+category: "masyarakat-dan-kesehatan-mental"
 excerpt: "Stigma adalah salah satu hambatan terbesar bagi orang yang membutuhkan bantuan kesehatan mental. Pahami jenis-jenis stigma dan cara kita bisa melawannya bersama."
 date: "2026-02-06"
 readTime: "6 menit"
-image: "images/edu_stigma.png"
+image: "/images/edu_stigma.png"
 tags: ["stigma", "masyarakat", "advokasi", "kesehatan-mental"]
 sources:
   - "Corrigan, P.W. (2004). How Stigma Interferes with Mental Health Care. American Psychologist."

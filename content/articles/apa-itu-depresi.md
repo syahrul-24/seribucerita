@@ -5,7 +5,7 @@ category: "kondisi-kesehatan-mental"
 excerpt: "Depresi bukan sekadar 'sedih biasa.' Kenali apa itu depresi, tanda-tandanya, dan bagaimana langkah awal untuk mencari pertolongan."
 date: "2026-02-13"
 readTime: "7 menit"
-image: "images/edu_depression_detail.png"
+image: "/images/edu_depression_detail.png"
 tags: ["depresi", "kondisi-mental", "tanda-gejala"]
 sources:
   - "World Health Organization. (2023). Depression: Key Facts."

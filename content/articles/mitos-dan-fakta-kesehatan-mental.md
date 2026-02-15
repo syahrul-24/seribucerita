@@ -5,7 +5,7 @@ category: "memahami-kesehatan-mental"
 excerpt: "Masih banyak mitos seputar kesehatan mental yang beredar di masyarakat. Yuk, kenali fakta sebenarnya agar kita bisa lebih memahami dan mendukung satu sama lain."
 date: "2026-02-14"
 readTime: "6 menit"
-image: "images/edu_myths.png"
+image: "/images/edu_myths.png"
 tags: ["mitos", "fakta", "kesehatan-mental", "edukasi"]
 sources:
   - "World Health Organization. (2022). Mental Health: Strengthening Our Response."

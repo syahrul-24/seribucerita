@@ -164,7 +164,8 @@
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
-                <span id="breadcrumb-category" class="text-secondary font-medium">Memuat...</span>
+                <a id="breadcrumb-category" href="/edukasi"
+                    class="text-secondary font-medium hover:underline">Memuat...</a>
             </nav>
         </div>
     </div>
@@ -295,8 +296,10 @@
 
         // Load article
         async function loadArticle() {
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get('slug');
+            // Extract slug from path: /edukasi/:category/:slug
+            const pathParts = window.location.pathname.split('/').filter(Boolean);
+            const slug = pathParts.length >= 3 ? pathParts[2] : null;
+            const categorySlug = pathParts.length >= 2 ? pathParts[1] : null;
             if (!slug) {
                 window.location.href = '/edukasi';
                 return;
@@ -312,7 +315,9 @@
                 document.querySelector('meta[name="description"]').content = article.excerpt;
 
                 // Breadcrumb
-                document.getElementById('breadcrumb-category').textContent = article.categoryName;
+                const breadcrumbCat = document.getElementById('breadcrumb-category');
+                breadcrumbCat.textContent = article.categoryName;
+                breadcrumbCat.href = `/edukasi/${article.category}`;
 
                 // Badge
                 const c = colorMap[article.categoryColor] || { bg: 'bg-primary/15', text: 'text-primary' };
@@ -340,7 +345,7 @@
 
                 // Hero image
                 const img = document.getElementById('article-image');
-                img.src = article.image || 'images/edu_depression.png';
+                img.src = article.image || '/images/edu_depression.png';
                 img.alt = article.title;
 
                 // Content
@@ -378,9 +383,9 @@
                     relGrid.innerHTML = DOMPurify.sanitize(article.related.map(r => {
                         const rc = colorMap[r.categoryColor] || { bg: 'bg-primary/15', text: 'text-primary' };
                         return `
-            <a href="/artikel?slug=${r.slug}"
+            <a href="/edukasi/${r.category}/${r.slug}"
                 class="bg-card rounded-2xl border border-primary/15 shadow-sm overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-pointer group block">
-                <img src="${r.image || 'images/edu_depression.png'}" alt="${r.title}" class="w-full h-36 object-cover" />
+                <img src="${r.image || '/images/edu_depression.png'}" alt="${r.title}" class="w-full h-36 object-cover" />
                 <div class="p-4">
                     <span class="inline-block text-xs font-semibold ${rc.text} ${rc.bg} px-2 py-0.5 rounded-full mb-2">${r.categoryName}</span>
                     <h3 class="font-heading text-base font-semibold text-ink group-hover:text-secondary transition-colors duration-200">${r.title}</h3>

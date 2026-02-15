@@ -26,10 +26,141 @@
             }
         }
 
-        .category-pill.active {
-            background-color: #C3B1E1;
-            color: #fff;
+        /* ===== Category Scroll ===== */
+        .category-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.75rem 0.25rem 1rem;
+            /* -- Visible thin scrollbar -- */
+            scrollbar-width: thin;
+            scrollbar-color: #C3B1E1 rgba(195, 177, 225, 0.15);
+        }
+
+        .category-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .category-scroll::-webkit-scrollbar-track {
+            background: rgba(195, 177, 225, 0.1);
+            border-radius: 8px;
+        }
+
+        .category-scroll::-webkit-scrollbar-thumb {
+            background: #C3B1E1;
+            border-radius: 8px;
+        }
+
+        .category-scroll-item {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+
+        .category-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(195, 177, 225, 0.18);
+            border-color: rgba(195, 177, 225, 0.4);
+        }
+
+        .category-card.active {
             border-color: #C3B1E1;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(195, 177, 225, 0.25);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .category-card:hover {
+                transform: none;
+            }
+        }
+
+        /* ===== Section alternating backgrounds (matches index.html) ===== */
+
+        /* ===== Search bar ===== */
+        .search-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(195, 177, 225, 0.25);
+        }
+
+        /* ===== Article cards (Type A — vertical) ===== */
+        .article-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 380px;
+        }
+
+        .article-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Type A grid wrapper */
+        .type-a-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .type-a-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .type-a-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .type-a-grid .article-card {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        /* ===== Mini-cards (Type B — horizontal) ===== */
+        .mini-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mini-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            border-color: rgba(195, 177, 225, 0.4);
+        }
+
+        /* ===== Illustration column ===== */
+        .illustration-col img {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .illustration-col:hover img {
+            transform: scale(1.03);
+        }
+
+        /* ===== No results state ===== */
+        .search-no-results {
+            display: none;
+        }
+
+        /* ===== CTA dual cards ===== */
+        .cta-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cta-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08);
         }
     </style>
 </head>
@@ -38,19 +169,19 @@
 
     <!-- ========== NAVBAR ========== -->
     <nav id="navbar"
-        class="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-primary/20 shadow-sm px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between transition-shadow duration-200">
+        class="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-primary/20 shadow-sm px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
         <a href="/" class="font-heading font-bold text-xl text-ink cursor-pointer">Seribu<span
                 class="text-secondary">Cerita</span></a>
         <ul class="hidden md:flex items-center gap-8 font-body text-sm font-medium text-muted">
             <li><a href="/" class="hover:text-ink transition-colors duration-200 cursor-pointer">Beranda</a></li>
-            <li><a href="/edukasi" class="text-ink font-semibold cursor-pointer">Edukasi</a></li>
+            <li><a href="/edukasi" class="text-secondary font-semibold cursor-pointer">Edukasi</a></li>
             <li><a href="/#chatbot" class="hover:text-ink transition-colors duration-200 cursor-pointer">Chatbot</a>
             </li>
             <li><a href="/#tentang" class="hover:text-ink transition-colors duration-200 cursor-pointer">Tentang</a>
             </li>
         </ul>
         <a href="/#chatbot"
-            class="hidden md:inline-block bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl hover:bg-accent/80 transition-colors duration-200 cursor-pointer">Mulai
+            class="hidden md:inline-block bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl hover:bg-accent/90 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md">Mulai
             Cerita</a>
         <button id="burger-btn" class="md:hidden p-2 cursor-pointer" aria-label="Toggle menu">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-ink" fill="none" viewBox="0 0 24 24"
@@ -59,106 +190,184 @@
             </svg>
         </button>
         <div id="mobile-menu"
-            class="hidden absolute top-full left-0 right-0 mt-2 bg-card border border-primary/20 rounded-2xl shadow-md p-4">
+            class="hidden absolute top-full left-0 right-0 mt-2 bg-card border border-primary/20 rounded-2xl shadow-xl p-4 mx-4">
             <ul class="flex flex-col gap-3 font-body text-sm font-medium text-muted">
                 <li><a href="/"
                         class="block py-2 hover:text-ink transition-colors duration-200 cursor-pointer">Beranda</a></li>
-                <li><a href="/edukasi" class="block py-2 text-ink font-semibold cursor-pointer">Edukasi</a></li>
+                <li><a href="/edukasi" class="block py-2 text-secondary font-semibold cursor-pointer">Edukasi</a></li>
                 <li><a href="/#chatbot"
                         class="block py-2 hover:text-ink transition-colors duration-200 cursor-pointer">Chatbot</a></li>
                 <li><a href="/#tentang"
                         class="block py-2 hover:text-ink transition-colors duration-200 cursor-pointer">Tentang</a></li>
             </ul>
             <a href="/#chatbot"
-                class="block mt-3 bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl text-center hover:bg-accent/80 transition-colors duration-200 cursor-pointer">Mulai
+                class="block mt-3 bg-accent text-ink text-sm font-semibold px-5 py-2 rounded-xl text-center hover:bg-accent/90 transition-all duration-200 cursor-pointer">Mulai
                 Cerita</a>
         </div>
     </nav>
 
     <!-- ========== HERO SECTION ========== -->
-    <section class="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto text-center">
-            <h1 class="font-heading text-4xl sm:text-5xl font-bold text-ink mb-4">Edukasi Kesehatan Mental</h1>
-            <p class="font-body text-muted text-base sm:text-lg max-w-2xl mx-auto mb-8">
-                Belajar dan pahami kesehatan mental. Temukan artikel-artikel yang membantumu memahami diri sendiri dan
-                orang-orang terdekat.
-            </p>
-        </div>
-    </section>
-
-    <!-- ========== CATEGORY FILTER ========== -->
-    <section class="px-4 sm:px-6 lg:px-8 pb-4">
-        <div class="max-w-6xl mx-auto">
-            <div id="category-filters" class="flex flex-wrap gap-3 justify-center">
-                <button onclick="filterCategory('')" data-category=""
-                    class="category-pill active px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 bg-card hover:bg-secondary hover:text-white hover:border-secondary transition-all duration-200 cursor-pointer">
-                    Semua
-                </button>
-                <!-- Category buttons will be injected by JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== ARTICLES GRID ========== -->
-    <section class="py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto">
-            <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Articles loaded via JS -->
-            </div>
-            <div id="articles-empty" class="hidden text-center py-16">
-                <p class="text-muted text-lg">Belum ada artikel di kategori ini.</p>
-            </div>
-            <div id="articles-loading" class="text-center py-16">
-                <div class="inline-flex items-center gap-3 text-muted">
-                    <svg class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
-                        </path>
-                    </svg>
-                    <span>Memuat artikel...</span>
+    <header class="relative pt-16 pb-14 overflow-hidden bg-blush/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-left">
+                    <span
+                        class="inline-block px-4 py-1.5 bg-white/60 text-secondary text-xs font-bold tracking-wider uppercase rounded-full mb-6 border border-secondary/20">Pusat
+                        Edukasi</span>
+                    <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-ink mb-6 leading-[1.15]">
+                        Tingkatkan <span class="text-secondary">Kesadaran</span>, Pulihkan <span
+                            class="text-secondary">Kesehatan</span>.
+                    </h1>
+                    <p class="font-body text-muted text-lg sm:text-xl leading-relaxed max-w-xl mb-10">
+                        Jelajahi perpustakaan pengetahuan lengkap kami untuk memahami kesehatan mental Anda. Informasi
+                        terpercaya untuk perjalanan pemulihan yang lebih bermakna.
+                    </p>
+                    <a href="#telusuri"
+                        class="inline-flex items-center gap-2 bg-secondary text-white font-semibold px-8 py-4 rounded-2xl hover:bg-secondary/90 transition-all duration-300 shadow-lg shadow-secondary/20 cursor-pointer">
+                        Mulai Menjelajah
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </a>
+                </div>
+                <!-- Hero Illustration -->
+                <div class="hidden lg:flex justify-center items-center">
+                    <img src="/images/edukasi_hero.png" alt="Ilustrasi Edukasi Kesehatan Mental"
+                        class="w-full max-w-md rounded-3xl shadow-2xl shadow-secondary/10" />
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- ========== CATEGORY NAVIGATION (non-sticky, stays in place) ========== -->
+    <section id="telusuri" class="bg-white border-b border-primary/10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative max-w-2xl">
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted pointer-events-none"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                    <input id="search-input" type="text" placeholder="Cari topik kesehatan mental..."
+                        class="search-input w-full pl-12 pr-12 py-3.5 bg-surface border border-primary/15 rounded-2xl text-ink text-sm font-body placeholder:text-muted/60 focus:outline-none focus:border-secondary/40" />
+                    <button id="search-clear"
+                        class="hidden absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-primary/10 text-muted hover:text-ink hover:bg-primary/20 flex items-center justify-center transition-all cursor-pointer"
+                        aria-label="Hapus pencarian">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="mb-5">
+                <h2 class="font-heading text-2xl font-bold text-ink">Telusuri Kategori</h2>
+                <p class="text-sm text-muted mt-1">Pilih topik untuk langsung menuju artikelnya</p>
+            </div>
+            <div id="category-scroll" class="category-scroll">
+                <!-- Category cards injected by JS -->
+            </div>
+        </div>
     </section>
 
-    <!-- ========== CTA SECTION ========== -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-blush/20">
-        <div class="max-w-2xl mx-auto text-center">
-            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-ink mb-4">Butuh Teman Bicara?</h2>
-            <p class="font-body text-muted text-base sm:text-lg leading-relaxed mb-8">
-                Setelah membaca, jika kamu merasa ingin bercerita tentang perasaanmu, SeribuCerita AI siap mendengarkan
-                dengan empati.
-            </p>
-            <a href="/#chatbot"
-                class="inline-block bg-secondary text-white font-semibold px-8 py-3 rounded-xl hover:bg-secondary/80 transition-colors duration-200 cursor-pointer">
-                Mulai Bercerita 💙
-            </a>
+    <!-- ========== PER-CATEGORY ARTICLE SECTIONS ========== -->
+    <main id="category-sections">
+        <!-- Category sections injected by JS -->
+    </main>
+
+    <!-- ========== LOADING STATE ========== -->
+    <div id="articles-loading" class="text-center py-24 bg-surface">
+        <div class="inline-flex flex-col items-center gap-4 text-muted">
+            <svg class="animate-spin w-10 h-10 text-secondary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <span class="font-medium">Menyiapkan artikel edukasi...</span>
+        </div>
+    </div>
+
+    <!-- ========== SEARCH NO RESULTS ========== -->
+    <div id="search-no-results" class="search-no-results text-center py-20 bg-surface">
+        <div class="inline-flex flex-col items-center gap-4 text-muted max-w-md">
+            <svg class="w-16 h-16 text-primary/30" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <p class="font-heading text-xl font-bold text-ink">Tidak ditemukan</p>
+            <p class="text-sm leading-relaxed">Coba gunakan kata kunci lain atau jelajahi kategori di atas.</p>
+        </div>
+    </div>
+
+    <!-- ========== DUAL CTA SECTION ========== -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/10 border-t border-primary/10">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- CTA 1: Chatbot (Primary focus) -->
+            <div
+                class="cta-card bg-white rounded-3xl p-8 sm:p-10 border border-primary/10 shadow-lg flex flex-col items-center text-center">
+                <div class="w-20 h-20 rounded-2xl bg-secondary/10 flex items-center justify-center mb-6">
+                    <svg class="w-10 h-10 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                    </svg>
+                </div>
+                <h3 class="font-heading text-2xl font-bold text-ink mb-3">Butuh Teman Bicara?</h3>
+                <p class="font-body text-muted text-sm leading-relaxed mb-8 max-w-xs">
+                    Setelah membaca, jika kamu ingin bercerita tentang perasaanmu, SeribuCerita AI siap mendengarkan
+                    dengan empati.
+                </p>
+                <a href="/#chatbot"
+                    class="inline-block bg-secondary text-white font-semibold px-8 py-3.5 rounded-2xl hover:bg-secondary/90 transition-all duration-300 shadow-lg shadow-secondary/20 cursor-pointer">
+                    Mulai Bercerita
+                </a>
+            </div>
+            <!-- CTA 2: Explore more -->
+            <div
+                class="cta-card bg-white rounded-3xl p-8 sm:p-10 border border-primary/10 shadow-lg flex flex-col items-center text-center">
+                <div class="w-20 h-20 rounded-2xl bg-accent/10 flex items-center justify-center mb-6">
+                    <svg class="w-10 h-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                </div>
+                <h3 class="font-heading text-2xl font-bold text-ink mb-3">Jelajahi Lebih Banyak</h3>
+                <p class="font-body text-muted text-sm leading-relaxed mb-8 max-w-xs">
+                    Temukan lebih banyak sumber belajar dan artikel tentang kesehatan mental yang bisa membantu
+                    perjalananmu.
+                </p>
+                <a href="#telusuri"
+                    class="inline-block bg-accent text-ink font-semibold px-8 py-3.5 rounded-2xl hover:bg-accent/90 transition-all duration-300 shadow-lg shadow-accent/20 cursor-pointer">
+                    Kembali ke Atas
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- ========== FOOTER ========== -->
-    <footer class="py-10 px-4 sm:px-6 lg:px-8 border-t border-primary/10">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="py-12 px-4 sm:px-6 lg:px-8 border-t border-primary/10 bg-card">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
             <p class="font-heading font-bold text-lg text-ink">Seribu<span class="text-secondary">Cerita</span></p>
             <p class="text-muted text-sm">&copy; 2026 SeribuCerita. Dibuat dengan empati.</p>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-5">
                 <a href="#" aria-label="Instagram"
-                    class="text-muted hover:text-ink transition-colors duration-200 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.5">
+                    class="text-muted hover:text-secondary transition-colors cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <rect x="2" y="2" width="20" height="20" rx="5" />
                         <circle cx="12" cy="12" r="5" />
                         <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
                     </svg>
                 </a>
                 <a href="#" aria-label="Twitter"
-                    class="text-muted hover:text-ink transition-colors duration-200 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                    class="text-muted hover:text-secondary transition-colors cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path
+                            d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5 0-.28-.03-.56-.08-.83A7.72 7.72 0 0023 3z" />
                     </svg>
                 </a>
             </div>
@@ -171,94 +380,281 @@
         const mobileMenu = document.getElementById('mobile-menu');
         burgerBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-        // Color map
-        const colorMap = {
-            primary: { bg: 'bg-primary/15', text: 'text-primary' },
-            secondary: { bg: 'bg-secondary/15', text: 'text-secondary' },
-            accent: { bg: 'bg-accent/15', text: 'text-accent' },
-            peach: { bg: 'bg-peach/15', text: 'text-peach' },
-            blush: { bg: 'bg-blush/15', text: 'text-blush' },
-        };
-        let allArticles = [];
-        let activeCategory = '';
 
-        // Load articles
+
+        // Color map for badges & icons
+        const colorMap = {
+            primary: { bg: 'bg-primary/10', text: 'text-primary', iconBg: 'bg-primary/10', iconText: 'text-primary' },
+            secondary: { bg: 'bg-secondary/10', text: 'text-secondary', iconBg: 'bg-secondary/10', iconText: 'text-secondary' },
+            accent: { bg: 'bg-accent/10', text: 'text-accent', iconBg: 'bg-accent/10', iconText: 'text-accent' },
+            peach: { bg: 'bg-peach/10', text: 'text-peach', iconBg: 'bg-peach/10', iconText: 'text-peach' },
+            blush: { bg: 'bg-blush/10', text: 'text-blush', iconBg: 'bg-blush/10', iconText: 'text-blush' },
+        };
+
+        // Section background classes — alternating, matching index.html palette
+        const sectionBgs = ['bg-surface', 'bg-blush/20'];
+
+        // Detect category from URL
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        let activeCategory = (pathParts.length === 2 && pathParts[0] === 'edukasi') ? pathParts[1] : '';
+
+        // Store references for search
+        let allArticlesData = [];
+        let allCategoriesData = {};
+
         async function loadArticles() {
             try {
                 const res = await fetch('/api/articles');
                 const data = await res.json();
-                allArticles = data.articles;
+                allArticlesData = data.articles;
+                allCategoriesData = data.categories;
 
-                // Build category filters
-                const filtersEl = document.getElementById('category-filters');
-                const categories = data.categories;
-                for (const [slug, cat] of Object.entries(categories)) {
-                    const btn = document.createElement('button');
-                    btn.className = 'category-pill px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 bg-card hover:bg-secondary hover:text-white hover:border-secondary transition-all duration-200 cursor-pointer';
-                    btn.textContent = cat.name;
-                    btn.onclick = () => filterCategory(slug);
-                    btn.dataset.category = slug;
-                    filtersEl.appendChild(btn);
-                }
-
-                renderArticles(allArticles);
+                buildCategoryScroll(allCategoriesData, allArticlesData);
+                buildCategorySections(allCategoriesData, allArticlesData);
+                document.getElementById('articles-loading').classList.add('hidden');
+                initSearch();
             } catch (e) {
                 console.error('Failed to load articles:', e);
                 document.getElementById('articles-loading').innerHTML =
-                    '<p class="text-muted text-lg">Gagal memuat artikel. Silakan coba lagi nanti.</p>';
+                    '<p class="text-muted text-lg font-medium p-12">Gagal memuat artikel. Silakan segarkan halaman.</p>';
             }
         }
 
-        function filterCategory(cat) {
-            activeCategory = cat;
-            // Update active pill
-            document.querySelectorAll('.category-pill').forEach(btn => {
-                const isActive = cat === '' ? !btn.dataset.category : btn.dataset.category === cat;
-                btn.classList.toggle('active', isActive);
+        function buildCategoryScroll(categories, articles) {
+            const scrollEl = document.getElementById('category-scroll');
+            const counts = {};
+            articles.forEach(a => { counts[a.category] = (counts[a.category] || 0) + 1; });
+
+            for (const [slug, cat] of Object.entries(categories)) {
+                const count = counts[slug] || 0;
+                if (count === 0) continue;
+
+                const c = colorMap[cat.color] || colorMap.primary;
+                const isActive = activeCategory === slug;
+
+                const card = document.createElement('a');
+                card.href = `#category-${slug}`;
+                card.className = `category-scroll-item category-card bg-surface rounded-2xl p-5 flex flex-col items-center gap-3 w-[160px] min-w-[160px] cursor-pointer${isActive ? ' active' : ''}`;
+                card.dataset.category = slug;
+
+                card.innerHTML = `
+                    <div class="w-14 h-14 rounded-xl ${c.iconBg} flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 ${c.iconText}" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="${cat.icon}" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-bold text-ink text-center leading-snug">${cat.name}</span>
+                    <span class="text-xs font-semibold ${c.text} ${c.bg} px-3 py-1 rounded-full">${count} artikel</span>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.getElementById(`category-${slug}`);
+                    if (target) {
+                        const offset = 80;
+                        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                    document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                });
+
+                scrollEl.appendChild(card);
+            }
+        }
+
+        /* ===== Build article card HTML (used by both Type A & B) ===== */
+        function buildVerticalCard(article) {
+            return `
+                <a href="/edukasi/${article.category}/${article.slug}"
+                   class="article-card bg-white rounded-2xl border border-primary/10 shadow-sm overflow-hidden flex flex-col cursor-pointer group"
+                   data-title="${article.title.toLowerCase()}" data-excerpt="${(article.excerpt || '').toLowerCase()}">
+                    <div class="relative overflow-hidden aspect-[16/10]">
+                        <img src="${article.image || '/images/edu_depression.png'}" alt="${article.title}"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    </div>
+                    <div class="p-5 sm:p-6 flex-grow flex flex-col">
+                        <h3 class="font-heading text-base sm:text-lg font-bold text-ink mb-2 group-hover:text-secondary transition-colors duration-200 line-clamp-2">
+                            ${article.title}
+                        </h3>
+                        <p class="font-body text-muted text-sm leading-relaxed mb-4 flex-grow line-clamp-3">${article.excerpt}</p>
+                        <div class="flex items-center gap-4 text-xs text-muted pt-3 border-t border-primary/5">
+                            <span class="flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                ${article.readTime}
+                            </span>
+                            <span>${new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
+        function buildMiniCard(article) {
+            return `
+                <a href="/edukasi/${article.category}/${article.slug}"
+                   class="mini-card bg-white rounded-xl border border-primary/10 p-3 flex items-center gap-4 cursor-pointer group"
+                   data-title="${article.title.toLowerCase()}" data-excerpt="${(article.excerpt || '').toLowerCase()}">
+                    <img src="${article.image || '/images/edu_depression.png'}" alt="${article.title}"
+                         class="w-16 h-16 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-heading text-sm font-bold text-ink group-hover:text-secondary transition-colors duration-200 leading-snug line-clamp-2">
+                            ${article.title}
+                        </h4>
+                        <span class="text-xs text-muted mt-1 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            ${article.readTime}
+                        </span>
+                    </div>
+                    <svg class="w-4 h-4 text-muted/40 group-hover:text-secondary flex-shrink-0 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            `;
+        }
+
+        function buildCategorySections(categories, articles) {
+            const container = document.getElementById('category-sections');
+            const grouped = {};
+            articles.forEach(a => {
+                if (!grouped[a.category]) grouped[a.category] = [];
+                grouped[a.category].push(a);
             });
-            const filtered = cat ? allArticles.filter(a => a.category === cat) : allArticles;
-            renderArticles(filtered);
+
+            let sectionIdx = 0;
+            for (const [slug, cat] of Object.entries(categories)) {
+                const catArticles = grouped[slug];
+                if (!catArticles || catArticles.length === 0) continue;
+
+                const c = colorMap[cat.color] || colorMap.primary;
+                const bgClass = sectionBgs[sectionIdx % sectionBgs.length];
+                sectionIdx++;
+
+                const section = document.createElement('section');
+                section.id = `category-${slug}`;
+                section.className = `category-section ${bgClass} py-16 px-4 sm:px-6 lg:px-8`;
+                section.dataset.category = slug;
+
+                // Decide layout: ≤4 articles → Type A (vertical cards), >4 → Type B (illustration + mini-cards)
+                const useTypeB = catArticles.length > 4;
+
+                const sectionHeader = `
+                    <div class="flex items-center gap-5 mb-10">
+                        <div class="w-16 h-16 rounded-2xl ${c.iconBg} flex items-center justify-center flex-shrink-0 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 ${c.iconText}" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="${cat.icon}" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-ink">${cat.name}</h2>
+                            <p class="text-sm text-muted mt-1">${catArticles.length} artikel tersedia</p>
+                        </div>
+                    </div>
+                `;
+
+                let contentHTML;
+
+                if (useTypeB) {
+                    // --- TYPE B: 2-column — illustration + mini-cards ---
+                    const heroArticle = catArticles[0];
+                    const heroImage = heroArticle.image || '/images/edu_depression.png';
+
+                    contentHTML = `
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+                            <!-- Illustration column (2/5 width) -->
+                            <div class="illustration-col lg:col-span-2 hidden lg:block">
+                                <div class="sticky top-24 rounded-2xl overflow-hidden shadow-lg border border-primary/10">
+                                    <img src="${heroImage}" alt="${cat.name}"
+                                         class="w-full aspect-[4/5] object-cover" loading="lazy" />
+                                    <div class="p-4 bg-white">
+                                        <p class="font-heading text-base font-bold text-ink">${cat.name}</p>
+                                        <p class="text-xs text-muted mt-1">${catArticles.length} artikel untuk dipelajari</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Mini-cards column (3/5 width) -->
+                            <div class="lg:col-span-3 flex flex-col gap-3">
+                                ${catArticles.map(a => buildMiniCard(a)).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // --- TYPE A: vertical card grid (consistent responsive grid) ---
+                    contentHTML = `
+                        <div class="type-a-grid">
+                            ${catArticles.map(a => buildVerticalCard(a)).join('')}
+                        </div>
+                    `;
+                }
+
+                section.innerHTML = DOMPurify.sanitize(`
+                    <div class="max-w-7xl mx-auto">
+                        ${sectionHeader}
+                        ${contentHTML}
+                    </div>
+                `);
+
+                container.appendChild(section);
+            }
+
+            // Auto-scroll if URL targets a category
+            if (activeCategory) {
+                setTimeout(() => {
+                    const target = document.getElementById(`category-${activeCategory}`);
+                    if (target) {
+                        const offset = 80;
+                        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({ top, behavior: 'instant' });
+                    }
+                }, 400);
+            }
         }
 
-        function renderArticles(articles) {
-            const grid = document.getElementById('articles-grid');
-            const empty = document.getElementById('articles-empty');
-            const loading = document.getElementById('articles-loading');
-            loading.classList.add('hidden');
+        /* ===== Search functionality ===== */
+        function initSearch() {
+            const input = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+            const noResults = document.getElementById('search-no-results');
+            let debounceTimer;
 
-            if (articles.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-                return;
+            input.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => filterArticles(input.value), 200);
+                clearBtn.classList.toggle('hidden', !input.value);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                clearBtn.classList.add('hidden');
+                filterArticles('');
+                input.focus();
+            });
+
+            function filterArticles(query) {
+                const q = query.trim().toLowerCase();
+                const sections = document.querySelectorAll('.category-section');
+                let totalVisible = 0;
+
+                sections.forEach(section => {
+                    const cards = section.querySelectorAll('.article-card, .mini-card');
+                    let sectionVisible = 0;
+
+                    cards.forEach(card => {
+                        const title = card.dataset.title || '';
+                        const excerpt = card.dataset.excerpt || '';
+                        const matches = !q || title.includes(q) || excerpt.includes(q);
+                        card.style.display = matches ? '' : 'none';
+                        if (matches) sectionVisible++;
+                    });
+
+                    section.style.display = sectionVisible > 0 ? '' : 'none';
+                    totalVisible += sectionVisible;
+                });
+
+                noResults.style.display = (q && totalVisible === 0) ? 'block' : 'none';
             }
-            empty.classList.add('hidden');
-
-            grid.innerHTML = DOMPurify.sanitize(articles.map(article => {
-                const c = colorMap[article.categoryColor] || { bg: 'bg-primary/15', text: 'text-primary' };
-                return `
-          <a href="/artikel?slug=${article.slug}"
-            class="bg-card rounded-2xl border border-primary/15 shadow-sm overflow-hidden hover:shadow-md hover:border-primary/30 transition-all duration-200 cursor-pointer group block">
-            <img src="${article.image || 'images/edu_depression.png'}" alt="${article.title}"
-              class="w-full h-48 object-cover" />
-            <div class="p-6">
-              <span class="inline-block text-xs font-semibold ${c.text} ${c.bg} px-3 py-1 rounded-full mb-3">${article.categoryName}</span>
-              <h3 class="font-heading text-xl font-semibold text-ink mb-2 group-hover:text-secondary transition-colors duration-200">
-                ${article.title}
-              </h3>
-              <p class="font-body text-muted text-sm leading-relaxed mb-4">${article.excerpt}</p>
-              <div class="flex items-center gap-4 text-xs text-muted">
-                <span class="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  ${article.readTime}
-                </span>
-                <span>${new Date(article.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-              </div>
-            </div>
-          </a>
-        `;
-            }).join(''));
         }
 
         loadArticles();

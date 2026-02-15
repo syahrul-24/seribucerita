@@ -5,7 +5,7 @@ category: "mencegah-bunuh-diri"
 excerpt: "Memahami tanda-tanda peringatan bunuh diri adalah langkah pertama untuk menyelamatkan nyawa. Pelajari apa yang perlu kamu perhatikan."
 date: "2026-02-11"
 readTime: "6 menit"
-image: "images/edu_prevention.png"
+image: "/images/edu_prevention.png"
 tags: ["bunuh-diri", "pencegahan", "tanda-peringatan"]
 sources:
   - "World Health Organization. (2021). Suicide Prevention."

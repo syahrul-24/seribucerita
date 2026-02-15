@@ -1,11 +1,11 @@
 ---
 title: "Mindfulness untuk Pemula"
 slug: "mindfulness-untuk-pemula"
-category: "gaya-hidup"
+category: "merawat-kesehatanmu"
 excerpt: "Mindfulness bukan sekadar tren — ini adalah cara sederhana untuk hadir sepenuhnya di saat ini. Pelajari langkah awal berlatih mindfulness."
 date: "2026-02-07"
 readTime: "5 menit"
-image: "images/edu_mindfulness.png"
+image: "/images/edu_mindfulness.png"
 tags: ["mindfulness", "meditasi", "gaya-hidup", "relaksasi"]
 sources:
   - "Kabat-Zinn, J. (2013). Full Catastrophe Living: Using the Wisdom of Your Body and Mind."

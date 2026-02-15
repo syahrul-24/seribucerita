@@ -5,7 +5,7 @@ category: "memahami-kesehatan-mental"
 excerpt: "Setiap orang memiliki kesehatan mental. Pahami apa arti kesehatan mental dan mengapa menjaganya sangat penting."
 date: "2026-02-15"
 readTime: "5 menit"
-image: "images/edu_depression.png"
+image: "/images/edu_depression.png"
 tags: ["kesehatan-mental", "dasar", "WHO"]
 sources:
   - "World Health Organization. (2014). Mental Health: a state of well-being."

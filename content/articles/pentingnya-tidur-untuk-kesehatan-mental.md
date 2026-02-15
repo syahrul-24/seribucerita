@@ -1,11 +1,11 @@
 ---
 title: "Pentingnya Tidur untuk Kesehatan Mental"
 slug: "pentingnya-tidur-untuk-kesehatan-mental"
-category: "kesehatan-mental-sehari-hari"
+category: "merawat-kesehatanmu"
 excerpt: "Tidur yang berkualitas adalah fondasi kesehatan mental. Pelajari hubungan antara tidur dan kesejahteraan emosionalmu."
 date: "2026-02-09"
 readTime: "5 menit"
-image: "images/edu_sleep.png"
+image: "/images/edu_sleep.png"
 tags: ["tidur", "sleep-hygiene", "kesehatan-mental-harian"]
 sources:
   - "National Sleep Foundation. (2023). How Sleep Affects Mental Health."

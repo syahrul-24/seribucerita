@@ -5,7 +5,7 @@ category: "kesehatan-mental-sehari-hari"
 excerpt: "Teknik sederhana yang bisa kamu lakukan setiap hari untuk mengurangi stres dan meningkatkan kesejahteraan."
 date: "2026-02-15"
 readTime: "7 menit"
-image: "images/edu_stress.png"
+image: "/images/edu_stress.png"
 tags: ["stres", "coping", "mindfulness", "teknik-pernapasan"]
 sources:
   - "American Psychological Association. (2023). Stress Management Tips."

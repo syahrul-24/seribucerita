@@ -1,11 +1,11 @@
 ---
 title: "Olahraga dan Kesehatan Mental"
 slug: "olahraga-dan-kesehatan-mental"
-category: "gaya-hidup"
+category: "gaya-hidup-dan-kesehatan-mental"
 excerpt: "Olahraga bukan hanya untuk kesehatan fisik. Temukan bagaimana aktivitas fisik bisa menjadi 'obat' alami untuk pikiran dan perasaanmu."
 date: "2026-02-08"
 readTime: "5 menit"
-image: "images/edu_exercise.png"
+image: "/images/edu_exercise.png"
 tags: ["olahraga", "gaya-hidup", "endorphin"]
 sources:
   - "Harvard Medical School. (2021). Exercise is an all-natural treatment to fight depression."

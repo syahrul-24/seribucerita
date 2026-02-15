@@ -1,11 +1,11 @@
 ---
 title: "Cara Membantu Orang Terdekat yang Mengalami Krisis"
 slug: "cara-membantu-orang-terdekat"
-category: "mencegah-bunuh-diri"
+category: "membantu-seseorang"
 excerpt: "Ketika seseorang yang kamu sayangi sedang dalam krisis, kamu bisa menjadi penyelamat. Pelajari cara mendukung mereka dengan tepat."
 date: "2026-02-10"
 readTime: "5 menit"
-image: "images/edu_helping.png"
+image: "/images/edu_helping.png"
 tags: ["dukungan", "krisis", "pencegahan", "orang-terdekat"]
 sources:
   - "World Health Organization. (2019). Helping a Suicidal Person."
