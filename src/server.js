@@ -25,7 +25,32 @@ const PORT = process.env.PORT || 3000;
 app.use(helmetMiddleware);
 app.use(corsMiddleware);
 app.use(express.json({ limit: '100kb' })); // Limit request body size
-app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// ============================================================
+// Clean URLs & Static Files
+// ============================================================
+// Explicitly serve main pages for clean URLs
+const publicPath = path.join(__dirname, '..', 'public');
+
+app.get('/edukasi', (req, res) => {
+    res.sendFile(path.join(publicPath, 'edukasi.html'));
+});
+
+app.get('/artikel', (req, res) => {
+    res.sendFile(path.join(publicPath, 'artikel.html'));
+});
+
+// Middleware to handle .html redirects (exclude static partials like /components/)
+app.use((req, res, next) => {
+    if (req.path.endsWith('.html') && req.path !== '/' && !req.path.startsWith('/components/')) {
+        const cleanPath = req.path.slice(0, -5);
+        return res.redirect(301, cleanPath + (req.url.slice(req.path.length)));
+    }
+    next();
+});
+
+// Serve static files (css, js, images, components)
+app.use(express.static(publicPath));
 
 // ============================================================
 // Health Check
