@@ -1,4 +1,4 @@
-# 💙 SeribuCerita — Teman Curhat AI untuk Kesehatan Mental
+# 💙 SeribuCerita — Teman Cerita AI untuk Kesehatan Mental
 
 <p align="center">
   <img src="public/images/hero_illustration.png" alt="SeribuCerita Hero" width="400"/>
@@ -18,7 +18,7 @@ Indonesia menghadapi krisis kesehatan mental yang serius:
 - **1 dari 5 orang Indonesia** mengalami gangguan kesehatan mental *(Riskesdas 2018)*
 - Hanya tersedia **1 psikolog per 400.000 penduduk** — jauh dari standar WHO
 - **Stigma sosial** masih menjadi penghalang utama untuk mencari bantuan profesional
-- Banyak orang **tidak tahu harus curhat ke siapa** saat merasa cemas, sedih, atau tertekan
+- Banyak orang **tidak tahu harus berbagi cerita ke siapa** saat merasa cemas, sedih, atau tertekan
 
 **SeribuCerita** hadir sebagai **solusi awal** — ruang aman digital tempat siapa saja bisa bercerita tanpa takut dihakimi.
 
@@ -30,14 +30,14 @@ Indonesia menghadapi krisis kesehatan mental yang serius:
 |--------|-----------|
 | 🎓 **Mahasiswa & Pelajar** | Menghadapi tekanan akademik, kecemasan sosial, dan quarter-life crisis |
 | 💼 **Pekerja Muda (20-35 tahun)** | Mengalami burnout, stres kerja, dan kesulitan work-life balance |
-| 🏠 **Siapa saja yang butuh teman curhat** | Merasa kesepian, butuh didengarkan, atau ingin berbagi perasaan tanpa menghakimi |
+| 🏠 **Siapa saja yang butuh teman cerita** | Merasa kesepian, butuh didengarkan, atau ingin berbagi perasaan tanpa menghakimi |
 | 📚 **Pencari informasi kesehatan mental** | Ingin belajar tentang depresi, stres, dan cara merawat diri sendiri |
 
 ---
 
 ## 💡 Bagaimana SeribuCerita Membantu Pengguna?
 
-### 1. 🤖 AI Chatbot Empatik — Teman Curhat 24/7
+### 1. 🤖 AI Chatbot Empatik — Teman Cerita 24/7
 SeribuCerita menggunakan **Google Gemini AI** dengan persona **psikolog profesional** yang:
 - **Mendengarkan tanpa menghakimi** — pengguna bebas cerita apa saja
 - Memberikan **respon empatik dan menenangkan** dengan bahasa yang suportif
@@ -63,7 +63,7 @@ Konten edukatif yang mudah dipahami untuk meningkatkan *mental health literacy*:
 |-------|-----------|
 | 🏠 **Landing Page** | Halaman utama dengan desain *Soft UI* yang menenangkan |
 | 🧭 **Navigasi Responsif** | Navbar yang rapi di desktop dan mobile (hamburger menu) |
-| 🎨 **Hero Section** | Headline dan CTA menuju chatbot |
+| 🎨 **Hero Section** | Headline yang mengundang dan CTA menuju chatbot |
 | 📚 **Seksi Edukasi** | 3 kartu artikel kesehatan mental dengan ilustrasi |
 | 💬 **Chatbot Interaktif** | Chat real-time dengan AI, typing indicator, dan bubble chat modern |
 | ℹ️ **Tentang Kami** | Penjelasan visi dan keunggulan SeribuCerita |
@@ -97,7 +97,7 @@ gemini-chatbot-api/
 │   └── script.js           # Logic chatbot & mobile menu
 ├── index.js                 # Express server + Gemini API
 ├── package.json
-├── .env                     # API Key
+├── .env                     # API Key (tidak di-push ke GitHub)
 ├── .gitignore
 └── README.md
 ```
@@ -124,7 +124,7 @@ npm install
 echo "GEMINI_API_KEY=your_api_key_here" > .env
 
 # 4. Jalankan server
-node index.js
+npm start
 ```
 
 Buka **http://localhost:3000** di browser Anda.
