@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     burgerBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
-    // Close mobile menu on link click
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
@@ -21,38 +20,100 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatBox = document.getElementById('chat-box');
   const sendBtn = document.getElementById('send-btn');
 
-  if (!chatForm || !userInput || !chatBox) {
-    console.error('Chat elements not found!');
-    return;
+  if (!chatForm || !userInput || !chatBox) return;
+
+  // ========== STORAGE KEYS ==========
+  const HISTORY_KEY = 'seribucerita_history';
+  const SAVE_PREF_KEY = 'seribucerita_save_pref';
+
+  // ========== STATE ==========
+  let conversationHistory = [];
+  let saveEnabled = loadSavePreference();
+
+  // ========== SETTINGS UI ==========
+  const settingsBtn = document.getElementById('chat-settings-btn');
+  const settingsMenu = document.getElementById('chat-settings-menu');
+  const saveToggle = document.getElementById('save-history-toggle');
+  const newChatBtn = document.getElementById('new-chat-btn');
+
+  if (settingsBtn && settingsMenu) {
+    // Toggle dropdown
+    settingsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsMenu.classList.toggle('hidden');
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!settingsMenu.contains(e.target) && e.target !== settingsBtn) {
+        settingsMenu.classList.add('hidden');
+      }
+    });
   }
 
-  // ========== CONVERSATION HISTORY (sessionStorage) ==========
-  const STORAGE_KEY = 'seribucerita_history';
-  let conversationHistory = [];
+  // Save toggle
+  if (saveToggle) {
+    saveToggle.checked = saveEnabled;
+    saveToggle.addEventListener('change', () => {
+      saveEnabled = saveToggle.checked;
+      localStorage.setItem(SAVE_PREF_KEY, saveEnabled ? 'true' : 'false');
 
-  // Restore from sessionStorage
-  try {
-    const saved = sessionStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      conversationHistory = JSON.parse(saved);
-    }
-  } catch {
-    conversationHistory = [];
+      if (!saveEnabled) {
+        // User turned off — remove saved history
+        localStorage.removeItem(HISTORY_KEY);
+      } else {
+        // User turned on — save current history
+        saveHistory();
+      }
+    });
+  }
+
+  // New chat button
+  if (newChatBtn) {
+    newChatBtn.addEventListener('click', () => {
+      conversationHistory = [];
+      localStorage.removeItem(HISTORY_KEY);
+
+      // Clear chat UI (keep welcome message)
+      chatBox.innerHTML = '';
+      chatBox.appendChild(createWelcomeMessage());
+
+      // Close dropdown
+      if (settingsMenu) settingsMenu.classList.add('hidden');
+    });
+  }
+
+  // ========== PERSISTENCE HELPERS ==========
+  function loadSavePreference() {
+    const pref = localStorage.getItem(SAVE_PREF_KEY);
+    // Default ON (true) if not set
+    return pref !== 'false';
   }
 
   function saveHistory() {
+    if (!saveEnabled) return;
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
     } catch {
-      // sessionStorage full — trim oldest messages
-      if (conversationHistory.length > 6) {
-        conversationHistory = conversationHistory.slice(-6);
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+      // Storage full — trim to last 10 messages
+      if (conversationHistory.length > 10) {
+        conversationHistory = conversationHistory.slice(-10);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
       }
     }
   }
 
-  // Bot avatar SVG (reusable)
+  function loadHistory() {
+    if (!saveEnabled) return [];
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  // ========== UI HELPERS ==========
   const botAvatarHTML = `
     <div class="w-8 h-8 rounded-full bg-secondary flex-shrink-0 flex items-center justify-center mt-0.5">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -60,6 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
       </svg>
     </div>
   `;
+
+  function createWelcomeMessage() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex items-start gap-3';
+    wrapper.innerHTML = `
+      ${botAvatarHTML}
+      <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm">
+        <p class="text-ink text-sm leading-relaxed">Halo! Saya <strong class="text-secondary">SeribuCerita</strong>, teman curhat AI kamu. Ceritakan apa saja yang kamu rasakan — saya siap mendengarkan tanpa menghakimi. 💙</p>
+      </div>
+    `;
+    return wrapper;
+  }
 
   function scrollToBottom() {
     chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
@@ -154,6 +227,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ========== RESTORE PREVIOUS CHAT ==========
+  function restoreChatHistory() {
+    const saved = loadHistory();
+    if (saved.length === 0) return;
+
+    conversationHistory = saved;
+
+    // Remove default welcome message and render history
+    chatBox.innerHTML = '';
+    chatBox.appendChild(createWelcomeMessage());
+
+    // Show a friendly "restored" indicator
+    const resumeNotice = document.createElement('div');
+    resumeNotice.className = 'flex justify-center';
+    resumeNotice.innerHTML = `
+      <div class="bg-secondary/10 border border-secondary/20 rounded-full px-4 py-1.5">
+        <p class="text-xs text-secondary font-medium">✨ Melanjutkan percakapan sebelumnya</p>
+      </div>
+    `;
+    chatBox.appendChild(resumeNotice);
+
+    // Re-render all messages
+    for (const msg of saved) {
+      if (msg.role === 'user') {
+        appendUserMessage(msg.text);
+      } else {
+        appendBotMessage(msg.text);
+      }
+    }
+  }
+
+  restoreChatHistory();
+
+  // ========== SEND MESSAGE ==========
   chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const message = userInput.value.trim();
@@ -162,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appendUserMessage(message);
     userInput.value = '';
 
-    // Add to conversation history
+    // Add to history
     conversationHistory.push({ role: 'user', text: message });
 
     setLoading(true);
@@ -187,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.result) {
         appendBotMessage(data.result);
-        // Add bot response to history
         conversationHistory.push({ role: 'model', text: data.result });
         saveHistory();
       } else {
