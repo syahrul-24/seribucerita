@@ -164,11 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const bubble = document.createElement('div');
     bubble.className = 'bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm';
 
-    const p = document.createElement('p');
-    p.className = 'text-ink text-sm leading-relaxed';
-    p.textContent = text;
+    const content = document.createElement('div');
+    content.className = 'text-ink text-sm leading-relaxed prose prose-sm max-w-none';
 
-    bubble.appendChild(p);
+    // Render markdown and sanitize to prevent XSS
+    if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+      content.innerHTML = DOMPurify.sanitize(marked.parse(text));
+    } else {
+      content.textContent = text;
+    }
+
+    bubble.appendChild(content);
     wrapper.appendChild(bubble);
     chatBox.appendChild(wrapper);
     scrollToBottom();

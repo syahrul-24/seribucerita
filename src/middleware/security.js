@@ -20,7 +20,8 @@ const helmetMiddleware = helmet({
 const allowedOrigins = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-];
+    process.env.PRODUCTION_URL,        // e.g. https://seribucerita.onrender.com
+].filter(Boolean); // Remove undefined values
 
 const corsMiddleware = cors({
     origin: (origin, callback) => {
@@ -28,7 +29,7 @@ const corsMiddleware = cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(null, true); // In development, allow all. Tighten for production.
+            callback(new Error('Not allowed by CORS'));
         }
     },
     methods: ['GET', 'POST'],

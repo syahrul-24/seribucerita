@@ -74,6 +74,12 @@ async function getArticleBySlug(slug) {
         return null;
     }
 
+    // Use cached list to quickly check if slug exists
+    const allArticles = await getAllArticles();
+    const meta = allArticles.find(a => a.slug === slug);
+    if (!meta) return null;
+
+    // Read only the matched file for full content
     const allFiles = await fs.readdir(ARTICLES_DIR);
     const mdFiles = allFiles.filter(f => f.endsWith('.md'));
 
@@ -86,7 +92,6 @@ async function getArticleBySlug(slug) {
             const html = marked(content);
 
             // Get related articles (same category, exclude current)
-            const allArticles = await getAllArticles();
             const related = allArticles
                 .filter(a => a.category === data.category && a.slug !== data.slug)
                 .slice(0, 3);

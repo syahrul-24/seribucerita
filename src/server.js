@@ -17,6 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('trust proxy', 1); // Trust first proxy (Render.com)
 const PORT = process.env.PORT || 3000;
 
 // ============================================================
@@ -40,9 +41,9 @@ app.get('/artikel', (req, res) => {
     res.sendFile(path.join(publicPath, 'artikel.html'));
 });
 
-// Middleware to handle .html redirects (exclude static partials like /components/)
+// Middleware to handle .html redirects
 app.use((req, res, next) => {
-    if (req.path.endsWith('.html') && req.path !== '/' && !req.path.startsWith('/components/')) {
+    if (req.path.endsWith('.html') && req.path !== '/') {
         const cleanPath = req.path.slice(0, -5);
         return res.redirect(301, cleanPath + (req.url.slice(req.path.length)));
     }
@@ -64,6 +65,13 @@ app.get('/health', (req, res) => {
 // ============================================================
 app.use('/api/chat', chatLimiter, validateChatInput, chatRoutes);
 app.use('/api/articles', articlesLimiter, articleRoutes);
+
+// ============================================================
+// 404 — Catch-all for unknown routes
+// ============================================================
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(publicPath, '404.html'));
+});
 
 // ============================================================
 // Centralized Error Handler (must be LAST)
