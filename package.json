@@ -1,19 +1,29 @@
 {
   "name": "gemini-chatbot-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
-  "description": "",
+  "description": "SeribuCerita — Chatbot psikolog virtual & edukasi kesehatan mental",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "keywords": [],
+  "keywords": [
+    "chatbot",
+    "mental-health",
+    "gemini"
+  ],
   "dependencies": {
     "@google/genai": "^1.41.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "gray-matter": "^4.0.3",
+    "helmet": "^8.1.0",
+    "marked": "^17.0.2"
   }
 }

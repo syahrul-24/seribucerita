@@ -26,6 +26,32 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  // ========== CONVERSATION HISTORY (sessionStorage) ==========
+  const STORAGE_KEY = 'seribucerita_history';
+  let conversationHistory = [];
+
+  // Restore from sessionStorage
+  try {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      conversationHistory = JSON.parse(saved);
+    }
+  } catch {
+    conversationHistory = [];
+  }
+
+  function saveHistory() {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+    } catch {
+      // sessionStorage full — trim oldest messages
+      if (conversationHistory.length > 6) {
+        conversationHistory = conversationHistory.slice(-6);
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+      }
+    }
+  }
+
   // Bot avatar SVG (reusable)
   const botAvatarHTML = `
     <div class="w-8 h-8 rounded-full bg-secondary flex-shrink-0 flex items-center justify-center mt-0.5">
@@ -136,6 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
     appendUserMessage(message);
     userInput.value = '';
 
+    // Add to conversation history
+    conversationHistory.push({ role: 'user', text: message });
+
     setLoading(true);
     showTypingIndicator();
 
@@ -144,12 +173,13 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          conversation: [{ role: 'user', text: message }]
+          conversation: conversationHistory
         })
       });
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
@@ -157,13 +187,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.result) {
         appendBotMessage(data.result);
+        // Add bot response to history
+        conversationHistory.push({ role: 'model', text: data.result });
+        saveHistory();
       } else {
         appendErrorMessage('Maaf, tidak ada respons yang diterima.');
       }
     } catch (error) {
       console.error('Error:', error);
       removeTypingIndicator();
-      appendErrorMessage('Gagal mendapatkan respons dari server.');
+      appendErrorMessage(error.message || 'Gagal mendapatkan respons dari server.');
     } finally {
       setLoading(false);
     }
