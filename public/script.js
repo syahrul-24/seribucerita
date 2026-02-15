@@ -228,14 +228,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ========== RESTORE PREVIOUS CHAT ==========
+  function createPrivacyNotice() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flex justify-center';
+    wrapper.id = 'privacy-notice';
+    wrapper.innerHTML = `
+      <div class="bg-accent/10 border border-accent/20 rounded-xl px-4 py-2.5 max-w-[90%] text-center">
+        <p class="text-xs text-muted leading-relaxed">
+          🔒 <strong class="text-ink">Privasimu aman.</strong> Percakapanmu hanya tersimpan di perangkatmu dan
+          tidak pernah kami simpan di server. Curhat dengan tenang ya 💙
+        </p>
+      </div>
+    `;
+    return wrapper;
+  }
+
   function restoreChatHistory() {
     const saved = loadHistory();
     if (saved.length === 0) return;
 
     conversationHistory = saved;
 
-    // Remove default welcome message and render history
+    // Clear and rebuild with privacy notice + welcome
     chatBox.innerHTML = '';
+    chatBox.appendChild(createPrivacyNotice());
     chatBox.appendChild(createWelcomeMessage());
 
     // Show a friendly "restored" indicator
