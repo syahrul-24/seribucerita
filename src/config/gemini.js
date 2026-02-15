@@ -3,6 +3,7 @@ import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from '@google/genai';
 // Initialize Gemini Client
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const GEMINI_MODEL = 'gemini-2.5-flash';
+const FALLBACK_MODELS = ['gemini-2.0-flash-lite', 'gemini-2.0-flash'];
 
 // ============================================================
 // SYSTEM INSTRUCTION — Persona Psikolog SeribuCerita
@@ -76,4 +77,4 @@ const SAFETY_SETTINGS = [
     },
 ];
 
-export { ai, GEMINI_MODEL, SYSTEM_INSTRUCTION, SAFETY_SETTINGS };
+export { ai, GEMINI_MODEL, FALLBACK_MODELS, SYSTEM_INSTRUCTION, SAFETY_SETTINGS };
