@@ -63,7 +63,7 @@ Konten edukatif yang mudah dipahami untuk meningkatkan *mental health literacy*:
 |-------|-----------|
 | 🏠 **Landing Page** | Halaman utama dengan desain *Soft UI* yang menenangkan |
 | 🧭 **Navigasi Responsif** | Navbar yang rapi di desktop dan mobile (hamburger menu) |
-| 🎨 **Hero Section** | Headline yang mengundang dan CTA menuju chatbot |
+| 🎨 **Hero Section** | Headline dan CTA menuju chatbot |
 | 📚 **Seksi Edukasi** | 3 kartu artikel kesehatan mental dengan ilustrasi |
 | 💬 **Chatbot Interaktif** | Chat real-time dengan AI, typing indicator, dan bubble chat modern |
 | ℹ️ **Tentang Kami** | Penjelasan visi dan keunggulan SeribuCerita |
@@ -97,7 +97,7 @@ gemini-chatbot-api/
 │   └── script.js           # Logic chatbot & mobile menu
 ├── index.js                 # Express server + Gemini API
 ├── package.json
-├── .env                     # API Key (tidak di-push ke GitHub)
+├── .env                     # API Key
 ├── .gitignore
 └── README.md
 ```
