@@ -114,6 +114,20 @@ app.use(errorHandler);
 // ============================================================
 const server = app.listen(PORT, () => {
     console.log(`Server ready on http://localhost:${PORT}`);
+
+    // Self-ping to prevent Render free tier from spinning down
+    if (process.env.NODE_ENV === 'production' && process.env.PRODUCTION_URL) {
+        const PING_INTERVAL = 14 * 60 * 1000; // 14 minutes
+        setInterval(async () => {
+            try {
+                const res = await fetch(`${process.env.PRODUCTION_URL}/health`);
+                console.log(`[keep-alive] ping → ${res.status}`);
+            } catch (err) {
+                console.error('[keep-alive] ping failed:', err.message);
+            }
+        }, PING_INTERVAL);
+        console.log('[keep-alive] Self-ping enabled (every 14 min)');
+    }
 });
 
 // Graceful shutdown
