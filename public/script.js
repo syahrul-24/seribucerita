@@ -19,8 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const userInput = document.getElementById('user-input');
   const chatBox = document.getElementById('chat-box');
   const sendBtn = document.getElementById('send-btn');
+  const charCounter = document.getElementById('char-counter');
 
   if (!chatForm || !userInput || !chatBox) return;
+
+  // ========== CONSTANTS ==========
+  const MAX_CHARS = 2000;
 
   // ========== STORAGE KEYS ==========
   const HISTORY_KEY = 'seribucerita_history';
@@ -37,13 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const newChatBtn = document.getElementById('new-chat-btn');
 
   if (settingsBtn && settingsMenu) {
-    // Toggle dropdown
     settingsBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       settingsMenu.classList.toggle('hidden');
     });
 
-    // Close dropdown on outside click
     document.addEventListener('click', (e) => {
       if (!settingsMenu.contains(e.target) && e.target !== settingsBtn) {
         settingsMenu.classList.add('hidden');
@@ -51,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Save toggle
   if (saveToggle) {
     saveToggle.checked = saveEnabled;
     saveToggle.addEventListener('change', () => {
@@ -59,34 +60,47 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem(SAVE_PREF_KEY, saveEnabled ? 'true' : 'false');
 
       if (!saveEnabled) {
-        // User turned off — remove saved history
         localStorage.removeItem(HISTORY_KEY);
       } else {
-        // User turned on — save current history
         saveHistory();
       }
     });
   }
 
-  // New chat button
   if (newChatBtn) {
     newChatBtn.addEventListener('click', () => {
       conversationHistory = [];
       localStorage.removeItem(HISTORY_KEY);
-
-      // Clear chat UI (keep welcome message)
       chatBox.innerHTML = '';
       chatBox.appendChild(createWelcomeMessage());
-
-      // Close dropdown
       if (settingsMenu) settingsMenu.classList.add('hidden');
+    });
+  }
+
+  // ========== CHARACTER COUNTER ==========
+  if (userInput && charCounter) {
+    userInput.addEventListener('input', () => {
+      const len = userInput.value.length;
+      charCounter.textContent = `${len}/${MAX_CHARS}`;
+      charCounter.classList.toggle('text-red-400', len > MAX_CHARS);
+      charCounter.classList.toggle('text-muted', len <= MAX_CHARS);
+      if (sendBtn) sendBtn.disabled = len > MAX_CHARS || len === 0;
+    });
+  }
+
+  // ========== TEXTAREA: Enter to submit, Shift+Enter for newline ==========
+  if (userInput) {
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (!sendBtn.disabled) chatForm.dispatchEvent(new Event('submit'));
+      }
     });
   }
 
   // ========== PERSISTENCE HELPERS ==========
   function loadSavePreference() {
     const pref = localStorage.getItem(SAVE_PREF_KEY);
-    // Default ON (true) if not set
     return pref !== 'false';
   }
 
@@ -95,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
     } catch {
-      // Storage full — trim to last 10 messages
       if (conversationHistory.length > 10) {
         conversationHistory = conversationHistory.slice(-10);
         localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
@@ -113,6 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ========== TIME HELPER ==========
+  function getTimeString() {
+    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
+
   // ========== UI HELPERS ==========
   const botAvatarHTML = `
     <div class="w-8 h-8 rounded-full bg-secondary flex-shrink-0 flex items-center justify-center mt-0.5">
@@ -124,11 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createWelcomeMessage() {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-start gap-3';
+    wrapper.className = 'flex items-start gap-3 chat-message';
     wrapper.innerHTML = `
       ${botAvatarHTML}
       <div class="bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm">
         <p class="text-ink text-sm leading-relaxed">Halo! Saya <strong class="text-secondary">SeribuCerita</strong>, teman cerita AI kamu. Ceritakan apa saja yang kamu rasakan — saya siap mendengarkan. 💙</p>
+        <p class="text-xs text-muted mt-1.5 text-right">${getTimeString()}</p>
       </div>
     `;
     return wrapper;
@@ -140,16 +159,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function appendUserMessage(text) {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex justify-end';
+    wrapper.className = 'flex justify-end chat-message';
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] shadow-sm';
+    bubble.className = 'bg-primary rounded-2xl rounded-tr-sm px-4 py-3 max-w-[78%] shadow-sm';
 
     const p = document.createElement('p');
-    p.className = 'text-ink text-sm leading-relaxed';
+    p.className = 'text-ink text-sm leading-relaxed whitespace-pre-wrap';
     p.textContent = text;
 
+    const time = document.createElement('p');
+    time.className = 'text-xs text-ink/50 mt-1.5 text-right';
+    time.textContent = getTimeString();
+
     bubble.appendChild(p);
+    bubble.appendChild(time);
     wrapper.appendChild(bubble);
     chatBox.appendChild(wrapper);
     scrollToBottom();
@@ -157,24 +181,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function appendBotMessage(text) {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-start gap-3';
+    wrapper.className = 'flex items-start gap-3 chat-message';
 
     wrapper.innerHTML = botAvatarHTML;
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%] shadow-sm';
+    bubble.className = 'bg-card border border-primary/10 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[78%] shadow-sm';
 
     const content = document.createElement('div');
     content.className = 'text-ink text-sm leading-relaxed prose prose-sm max-w-none';
 
-    // Render markdown and sanitize to prevent XSS
     if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
       content.innerHTML = DOMPurify.sanitize(marked.parse(text));
     } else {
       content.textContent = text;
     }
 
+    const time = document.createElement('p');
+    time.className = 'text-xs text-muted mt-1.5 text-right';
+    time.textContent = getTimeString();
+
     bubble.appendChild(content);
+    bubble.appendChild(time);
     wrapper.appendChild(bubble);
     chatBox.appendChild(wrapper);
     scrollToBottom();
@@ -210,13 +238,14 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.className = 'flex justify-center';
 
     const bubble = document.createElement('div');
-    bubble.className = 'bg-peach/20 border border-peach/30 rounded-xl px-4 py-2';
+    bubble.className = 'bg-red-50 border border-red-200 rounded-xl px-4 py-2.5 max-w-[90%] flex items-start gap-2';
+    bubble.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+      </svg>
+      <p class="text-red-600 text-xs leading-relaxed">${text}</p>
+    `;
 
-    const p = document.createElement('p');
-    p.className = 'text-ink text-xs font-medium';
-    p.textContent = text;
-
-    bubble.appendChild(p);
     wrapper.appendChild(bubble);
     chatBox.appendChild(wrapper);
     scrollToBottom();
@@ -230,6 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       if (sendBtn) sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       userInput.focus();
+      // Update btn state based on current input
+      const len = userInput.value.length;
+      if (sendBtn) sendBtn.disabled = len > MAX_CHARS || len === 0;
     }
   }
 
@@ -241,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.innerHTML = `
       <div class="bg-accent/10 border border-accent/20 rounded-xl px-4 py-2.5 max-w-[90%] text-center">
         <p class="text-xs text-muted leading-relaxed">
-          🔒 <strong class="text-ink">Privasimu aman.</strong> Percakapanmu hanya tersimpan di perangkatmu dan
+          🔒 <strong class="text-ink">Privasimu aman.</strong> Percakapanmu hanya tersimpan di perangkatmu
           dan tidak pernah kami simpan. Kamu bisa berbagi dengan tenang 💙
         </p>
       </div>
@@ -255,12 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     conversationHistory = saved;
 
-    // Clear and rebuild with privacy notice + welcome
     chatBox.innerHTML = '';
     chatBox.appendChild(createPrivacyNotice());
     chatBox.appendChild(createWelcomeMessage());
 
-    // Show a friendly "restored" indicator
     const resumeNotice = document.createElement('div');
     resumeNotice.className = 'flex justify-center';
     resumeNotice.innerHTML = `
@@ -270,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     chatBox.appendChild(resumeNotice);
 
-    // Re-render all messages
     for (const msg of saved) {
       if (msg.role === 'user') {
         appendUserMessage(msg.text);
@@ -288,10 +317,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = userInput.value.trim();
     if (!message) return;
 
+    // Frontend validation
+    if (message.length > MAX_CHARS) {
+      appendErrorMessage(`Pesanmu terlalu panjang (${message.length} karakter). Maksimal ${MAX_CHARS} karakter.`);
+      return;
+    }
+
     appendUserMessage(message);
     userInput.value = '';
 
-    // Add to history
+    // Reset textarea height & counter
+    userInput.style.height = 'auto';
+    if (charCounter) {
+      charCounter.textContent = `0/${MAX_CHARS}`;
+      charCounter.classList.remove('text-red-400');
+      charCounter.classList.add('text-muted');
+    }
+
     conversationHistory.push({ role: 'user', text: message });
 
     setLoading(true);

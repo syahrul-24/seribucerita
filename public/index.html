@@ -64,6 +64,32 @@
       animation-delay: 0.32s;
     }
 
+    /* Chat message fade-in animation */
+    @keyframes msg-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chat-message {
+      animation: msg-in 0.25s ease both;
+    }
+
+    /* Textarea auto-resize */
+    #user-input {
+      resize: none;
+      overflow-y: hidden;
+      min-height: 44px;
+      max-height: 120px;
+      line-height: 1.5;
+    }
+
     /* Chatbot markdown prose styling */
     .prose p {
       margin-bottom: 0.5em;
@@ -312,19 +338,28 @@
           </div>
         </div>
         <!-- Chat Input -->
-        <form id="chat-form" class="flex items-center gap-3 px-4 py-4 border-t border-primary/10 bg-card">
-          <label for="user-input" class="sr-only">Ketik pesan kamu</label>
-          <input type="text" id="user-input" placeholder="Ketik pesan kamu..." autocomplete="off" required
-            class="flex-1 bg-surface border border-primary/20 rounded-xl px-4 py-3 text-sm text-ink placeholder-muted outline-none focus:border-secondary/50 focus:ring-2 focus:ring-secondary/20 transition-all duration-200 font-body" />
-          <button type="submit" id="send-btn"
-            class="bg-secondary text-white rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 hover:bg-secondary/80 active:scale-95 flex items-center gap-2 cursor-pointer">
-            <span>Kirim</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-            </svg>
-          </button>
+        <form id="chat-form" class="flex flex-col gap-2 px-4 py-3 border-t border-primary/10 bg-card">
+          <!-- Character counter row -->
+          <div class="flex justify-end">
+            <span id="char-counter" class="text-xs text-muted transition-colors duration-200">0/2000</span>
+          </div>
+          <!-- Input row -->
+          <div class="flex items-end gap-3">
+            <label for="user-input" class="sr-only">Ketik pesan kamu</label>
+            <textarea id="user-input" rows="1" placeholder="Ketik pesan... (Enter kirim, Shift+Enter baris baru)"
+              autocomplete="off"
+              class="flex-1 bg-surface border border-primary/20 rounded-xl px-4 py-3 text-sm text-ink placeholder-muted outline-none focus:border-secondary/50 focus:ring-2 focus:ring-secondary/20 transition-all duration-200 font-body"
+              oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+            <button type="submit" id="send-btn" disabled
+              class="bg-secondary text-white rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 hover:bg-secondary/80 active:scale-95 flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+              </svg>
+            </button>
+          </div>
+          <p class="text-xs text-muted/70 text-center">SeribuCerita adalah AI — bukan pengganti psikolog profesional</p>
         </form>
       </div>
     </div>

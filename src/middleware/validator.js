@@ -1,5 +1,5 @@
 const ALLOWED_ROLES = ['user', 'model'];
-const MAX_TEXT_LENGTH = 2000;
+const MAX_USER_TEXT_LENGTH = 2000;  // Batas hanya untuk input user
 const MAX_CONVERSATION_LENGTH = 20;
 
 /**
@@ -56,9 +56,10 @@ function validateChatInput(req, res, next) {
             });
         }
 
-        if (msg.text.length > MAX_TEXT_LENGTH) {
+        // Hanya batasi panjang untuk pesan user, bukan respons model yang bisa panjang
+        if (msg.role === 'user' && msg.text.length > MAX_USER_TEXT_LENGTH) {
             return res.status(400).json({
-                error: `Pesan ke-${i + 1}: text maksimal ${MAX_TEXT_LENGTH} karakter.`,
+                error: `Pesan ke-${i + 1}: pesan terlalu panjang. Maksimal ${MAX_USER_TEXT_LENGTH} karakter.`,
             });
         }
     }
