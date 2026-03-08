@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ========== STATE ==========
   let conversationHistory = [];
+  let sessionSummary = null;   // Ringkasan sesi (dikirim server saat history panjang)
   let saveEnabled = loadSavePreference();
 
   // ========== SETTINGS UI ==========
@@ -70,7 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (newChatBtn) {
     newChatBtn.addEventListener('click', () => {
       conversationHistory = [];
+      sessionSummary = null;
       localStorage.removeItem(HISTORY_KEY);
+      localStorage.removeItem('seribucerita_summary');
       chatBox.innerHTML = '';
       chatBox.appendChild(createWelcomeMessage());
       if (settingsMenu) settingsMenu.classList.add('hidden');
@@ -108,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!saveEnabled) return;
     try {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(conversationHistory));
+      if (sessionSummary) localStorage.setItem('seribucerita_summary', sessionSummary);
     } catch {
       if (conversationHistory.length > 10) {
         conversationHistory = conversationHistory.slice(-10);
@@ -120,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!saveEnabled) return [];
     try {
       const saved = localStorage.getItem(HISTORY_KEY);
+      sessionSummary = localStorage.getItem('seribucerita_summary') || null;
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -344,7 +349,8 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          conversation: conversationHistory
+          conversation: conversationHistory,
+          summary: sessionSummary       // kirim ringkasan sesi jika ada
         })
       });
 
@@ -359,6 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.result) {
         appendBotMessage(data.result);
         conversationHistory.push({ role: 'model', text: data.result });
+        // Simpan summary terbaru yang dikembalikan server
+        if (data.summary) sessionSummary = data.summary;
         saveHistory();
       } else {
         appendErrorMessage('Maaf, tidak ada respons yang diterima.');
