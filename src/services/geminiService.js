@@ -15,7 +15,7 @@ async function tryModel(model, contents, config = {}) {
             contents,
             config: {
                 temperature: 1.0,
-                maxOutputTokens: 1024,
+                maxOutputTokens: 2048,
                 topP: 0.95,
                 systemInstruction: SYSTEM_INSTRUCTION,
                 safetySettings: SAFETY_SETTINGS,
